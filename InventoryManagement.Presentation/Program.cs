@@ -1,3 +1,8 @@
+using InventoryManagement.DataAccess.Data;
+using InventoryManagement.DataAccess.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+
 namespace InventoryManagement.Presentation
 {
     public class Program
@@ -6,8 +11,28 @@ namespace InventoryManagement.Presentation
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            var connectionString = builder.Configuration.GetConnectionString("default");
+
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+
+            builder.Services.AddDbContext<ApplicationDbContext>
+            (
+                options => options.UseSqlServer(connectionString)
+            );
+            builder.Services.AddIdentity<User, IdentityRole>
+            (
+                options =>
+                {
+                    options.Password.RequiredUniqueChars = 0;
+                    options.Password.RequireUppercase = false;
+                    options.Password.RequiredLength = 8;
+                    options.Password.RequireNonAlphanumeric = false;
+                    options.Password.RequireLowercase = false;
+                }
+            )
+            .AddEntityFrameworkStores<ApplicationDbContext>()
+            .AddDefaultTokenProviders();
 
             var app = builder.Build();
 
