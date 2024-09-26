@@ -30,6 +30,13 @@
 				<input asp-for="ConfirmPassword" class="form-control" />
 				<span asp-validation-for="ConfirmPassword" class="text-danger"></span>
 			</div>
+			<div class="my-3">
+				<label asp-for="Role"></label>
+				<select asp-for="Role" asp-items="@Model.RoleList" class="form-select" area-required="true">
+					<option disabled selected>Select role</option>
+				</select>
+				<span asp-validation-for="Role" class="text-danger"></span>
+			</div>
 			<div class="mb-1">
 				<label asp-for="Address"></label>
 				<textarea asp-for="Address" class="form-control" rows="2"></textarea>

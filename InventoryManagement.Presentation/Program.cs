@@ -20,7 +20,8 @@ namespace InventoryManagement.Presentation
             (
                 options => options.UseSqlServer(connectionString)
             );
-            builder.Services.AddIdentity<User, IdentityRole>
+
+            builder.Services.AddIdentity<User,IdentityRole>
             (
                 options =>
                 {
@@ -31,6 +32,7 @@ namespace InventoryManagement.Presentation
                     options.Password.RequireLowercase = false;
                 }
             )
+            .AddRoles<IdentityRole>()
             .AddEntityFrameworkStores<ApplicationDbContext>()
             .AddDefaultTokenProviders();
 

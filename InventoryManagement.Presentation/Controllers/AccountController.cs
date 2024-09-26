@@ -2,6 +2,7 @@
 using InventoryManagement.Presentation.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace InventoryManagement.Presentation.Controllers
 {
@@ -9,11 +10,13 @@ namespace InventoryManagement.Presentation.Controllers
     {
         private readonly SignInManager<User> _signInManager;
 		private readonly UserManager<User> _userManager;
+		private readonly RoleManager<IdentityRole> _roleManager;
 
-		public AccountController(SignInManager<User> signInManager, UserManager<User> userManager)
+		public AccountController(SignInManager<User> signInManager, UserManager<User> userManager, RoleManager<IdentityRole> roleManager)
         {
             _signInManager = signInManager;
             _userManager = userManager;
+            _roleManager = roleManager;
         }
         public IActionResult Login()
         {
@@ -42,7 +45,19 @@ namespace InventoryManagement.Presentation.Controllers
 
 		public IActionResult Register()
         {
-            return View();
+			var roles = _roleManager.Roles.Select(r => new SelectListItem
+			{
+				Value = r.Name,
+				Text = r.Name
+			}).ToList();
+
+			// Pass the roles to the view model
+			var model = new RegisterViewModel
+			{
+				RoleList = roles
+			};
+
+			return View(model);
         }
 
         [HttpPost]
@@ -62,7 +77,8 @@ namespace InventoryManagement.Presentation.Controllers
 
                 if (result.Succeeded)
                 {
-                    Console.WriteLine("Registration Successful");
+                    await _userManager.AddToRoleAsync(user,model.Role);
+
                     await _signInManager.SignInAsync(user, false);
 
 					return RedirectToAction("Index", "Home");
@@ -73,7 +89,7 @@ namespace InventoryManagement.Presentation.Controllers
                     ModelState.AddModelError("",error.Description);
                 }
             }
-			return View(model);
+			return View(model); 
 		}
 
 		public async Task<IActionResult> Logout()

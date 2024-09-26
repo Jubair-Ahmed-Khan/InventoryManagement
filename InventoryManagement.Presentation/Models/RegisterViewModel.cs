@@ -1,4 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using System.ComponentModel.DataAnnotations;
 
 namespace InventoryManagement.Presentation.Models
 {
@@ -21,6 +24,12 @@ namespace InventoryManagement.Presentation.Models
 
         [DataType(DataType.MultilineText)]
         public string? Address {  get; set; }
+
+        [Required]
+        public string? Role { get;set; }
+
+        [ValidateNever]
+        public IEnumerable<SelectListItem> RoleList {  get; set; }
 
     }
 }
