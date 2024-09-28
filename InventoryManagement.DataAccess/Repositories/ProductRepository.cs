@@ -14,12 +14,10 @@ namespace InventoryManagement.DataAccess.Repositories;
 public class ProductRepository : IProductRepository
 {
     private readonly ApplicationDbContext _context;
-    private readonly IServiceScopeFactory _serviceScopeFactory;
 
     public ProductRepository(ApplicationDbContext context, IServiceScopeFactory serviceScopeFactory)
     {
         _context = context;
-        _serviceScopeFactory = serviceScopeFactory;
     }
 
     public async Task<IEnumerable<Product>> GetAllAsync()
@@ -50,26 +48,6 @@ public class ProductRepository : IProductRepository
 
         await _context.SaveChangesAsync();
     }
-
-    //public async Task UpdateAsync(int id, Product product)
-    //{
-    //    using (var scope = _serviceScopeFactory.CreateScope())
-    //    {
-    //        var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-
-    //        var pr = await context.Products.FindAsync(id);
-    //        if (pr == null)
-    //        {
-    //            throw new KeyNotFoundException($"Product with id {id} not found.");
-    //        }
-
-    //        // Update properties
-    //        pr.ProductName = product.ProductName;
-    //        pr.ProductQuantity = product.ProductQuantity;
-
-    //        await _context.SaveChangesAsync();
-    //    }
-    //}
 
     public async Task DeleteAsync(int id)
     {

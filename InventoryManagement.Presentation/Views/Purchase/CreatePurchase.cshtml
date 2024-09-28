@@ -1,0 +1,56 @@
+﻿@model InventoryManagement.DataAccess.Models.Purchase
+
+@{
+    ViewData["Title"] = "CreatePurchase";
+}
+
+
+
+<h1 class="text-primary">Add Purchase</h1>
+<hr />
+
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="CreatePurchase">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="PurchaseProduct">
+                    @Html.DisplayName("Product Name")
+                </label>
+                <select asp-for="PurchaseProduct" asp-items="@ViewBag.ProductName" class="form-select" area-required="true">
+                    <option disabled selected>Select Product</option>
+                </select>
+                <span asp-validation-for="PurchaseProduct" class="text-danger"></span>
+                 @* <label asp-for="PurchaseProduct" class="control-label">
+                     @Html.DisplayName("Product Name")
+                 </label>
+                 <input asp-for="PurchaseProduct" class="form-control" />
+                 <span asp-validation-for="PurchaseProduct" class="text-danger"></span> *@
+            </div>
+            <div class="form-group">
+                <label asp-for="PurchaseQuantity" class="control-label">
+                    @Html.DisplayName("Product Quantity")
+                </label>
+                <input asp-for="PurchaseQuantity" class="form-control" />
+                <span asp-validation-for="PurchaseQuantity" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PurchaseDate" class="control-label">
+                    @Html.DisplayName("Purchase Date")
+                </label>
+                <input asp-for="PurchaseDate" class="form-control" />
+                <span asp-validation-for="PurchaseDate" class="text-danger"></span>
+            </div>
+            <div class="form-group my-3">
+                <input type="submit" value="Create" class="btn btn-primary" />
+                <a class="btn btn-danger" asp-action="DisplayPurchase" asp-controller="Purchase">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

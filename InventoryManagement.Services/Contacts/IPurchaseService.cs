@@ -5,13 +5,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace InventoryManagement.DataAccess.Contacts
+namespace InventoryManagement.Services.Contacts
 {
-    public interface IPurchaseRepository
+    public interface IPurchaseService
     {
         Task<IEnumerable<Purchase>> GetAllAsync();
         Task<Purchase> GetByIdAsync(int id);
-        Task AddAsync(Purchase product);
+        Task AddAsync(Purchase purchase);
         Task UpdateAsync(int id, Purchase purchase);
         Task DeleteAsync(int id);
     }

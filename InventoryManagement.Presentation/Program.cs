@@ -25,8 +25,6 @@ namespace InventoryManagement.Presentation
                 }
             );
 
-            //    builder.Services.AddDbContext<ApplicationDbContext>(options =>
-            //options.UseSqlServer(builder.Configuration.GetConnectionString("default")));
 
             builder.Services.AddIdentity<User, IdentityRole>
             (
@@ -44,7 +42,11 @@ namespace InventoryManagement.Presentation
             .AddDefaultTokenProviders();
 
             builder.Services.AddScoped<IProductRepository, ProductRepository>();
+            builder.Services.AddScoped<IPurchaseRepository, PurchaseRepository>();
+
+
             builder.Services.AddScoped<IProductService, ProductService>();
+            builder.Services.AddScoped<IPurchaseService, PurchaseService>();
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
