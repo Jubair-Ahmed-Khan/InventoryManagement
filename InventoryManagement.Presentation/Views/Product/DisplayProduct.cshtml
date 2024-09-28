@@ -1,9 +1,8 @@
 ﻿@model IEnumerable<InventoryManagement.DataAccess.Models.Product>
 
 @{
-    ViewData["Title"] = "DisplayProduct";
+    ViewData["Title"] = "Display Products";
 }
-
 
 <div class="d-flex justify-content-between align-items-center mb-5">
     <h1 class="text-primary">Product List</h1>
@@ -27,20 +26,21 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.ProductName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ProductQuantity)
-            </td>
-            <td>
-                <a class="btn btn-primary" asp-action="UpdateProduct" asp-controller="Product" asp-route-id="@item.Id">Edit</a> 
-                    <a class="btn btn-success" asp-action="ProductDetails" asp-controller="Product" asp-route-id="@item.Id">Details</a>
-                    <a class="btn btn-danger" asp-action="DeleteProduct" asp-controller="Product" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model) 
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ProductName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ProductQuantity)
+                </td>
+                <td>
+                    <a class="btn btn-primary" asp-action="UpdateProduct" asp-controller="Product" asp-route-id="@item.Id">Edit</a> 
+                        <a class="btn btn-success" asp-action="ProductDetails" asp-controller="Product" asp-route-id="@item.Id">Details</a>
+                        <a class="btn btn-danger" asp-action="DeleteProduct" asp-controller="Product" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>

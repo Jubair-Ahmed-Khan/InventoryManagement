@@ -1,13 +1,13 @@
 ﻿@model InventoryManagement.DataAccess.Models.Purchase
 
 @{
-    ViewData["Title"] = "PurchaseDetails";
+    ViewData["Title"] = "Purchase Details";
 }
 
 <h1 class="text-primary">Purchase Details</h1>
+<hr />
 
 <div>
-    <hr />
     <dl class="row">
         <dt class = "col-sm-2">
             @Html.DisplayName("Product Name")
@@ -25,7 +25,7 @@
             @Html.DisplayName("Purchase Date")
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.PurchaseDate)
+            @Model.PurchaseDate.ToString("dd/MM/yy")
         </dd>
     </dl>
 </div>

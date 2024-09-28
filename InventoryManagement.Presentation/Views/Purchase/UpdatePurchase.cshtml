@@ -1,12 +1,12 @@
 ﻿@model InventoryManagement.DataAccess.Models.Purchase
 
 @{
-    ViewData["Title"] = "UpdatePurchase";
+    ViewData["Title"] = "Update Purchase";
 }
 
 <h1 class="text-primary">Edit Purchase</h1>
-
 <hr />
+
 <div class="row">
     <div class="col-md-4">
         <form asp-action="UpdatePurchase">
@@ -41,7 +41,6 @@
         </form>
     </div>
 </div>
-
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

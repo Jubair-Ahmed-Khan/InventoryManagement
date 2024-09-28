@@ -65,6 +65,7 @@ public class ProductController : Controller
     {
        
         await _productService.UpdateAsync(id,product);
+
         return RedirectToAction("DisplayProduct", "Product");
     }
 

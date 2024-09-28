@@ -1,83 +1,80 @@
-using InventoryManagement.DataAccess.Contacts;
-using InventoryManagement.DataAccess.Data;
-using InventoryManagement.DataAccess.Models;
 using InventoryManagement.DataAccess.Repositories;
+using InventoryManagement.DataAccess.Contacts;
+using InventoryManagement.DataAccess.Models;
 using InventoryManagement.Services.Contacts;
 using InventoryManagement.Services.Services;
+using InventoryManagement.DataAccess.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using System.Configuration;
 
-namespace InventoryManagement.Presentation
+namespace InventoryManagement.Presentation;
+
+public class Program
 {
-    public class Program
+    public static void Main(string[] args)
     {
-        public static void Main(string[] args)
-        {
-            var builder = WebApplication.CreateBuilder(args);
+        var builder = WebApplication.CreateBuilder(args);
 
-            
-            builder.Services.AddDbContext<ApplicationDbContext>
-            (
-                options => {
-                    var connectionString = builder.Configuration.GetConnectionString("default");
-                    options.UseSqlServer(connectionString);
-                }
-            );
-
-
-            builder.Services.AddIdentity<User, IdentityRole>
-            (
-                options =>
-                {
-                    options.Password.RequiredUniqueChars = 0;
-                    options.Password.RequireUppercase = false;
-                    options.Password.RequiredLength = 8;
-                    options.Password.RequireNonAlphanumeric = false;
-                   options.Password.RequireLowercase = false;
-               }
-            )
-            .AddRoles<IdentityRole>()
-            .AddEntityFrameworkStores<ApplicationDbContext>()
-            .AddDefaultTokenProviders();
-
-            builder.Services.AddScoped<IProductRepository, ProductRepository>();
-            builder.Services.AddScoped<IPurchaseRepository, PurchaseRepository>();
-
-
-            builder.Services.AddScoped<IProductService, ProductService>();
-            builder.Services.AddScoped<IPurchaseService, PurchaseService>();
-
-            // Add services to the container.
-            builder.Services.AddControllersWithViews();
-
-            builder.Services.AddResponseCaching();
-
-            
-
-            var app = builder.Build();
-
-            // Configure the HTTP request pipeline.
-            if (!app.Environment.IsDevelopment())
-            {
-                app.UseExceptionHandler("/Home/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                app.UseHsts();
+        builder.Services.AddDbContext<ApplicationDbContext>
+        (
+            options => {
+                var connectionString = builder.Configuration.GetConnectionString("default");
+                options.UseSqlServer(connectionString);
             }
+        );
 
-            app.UseResponseCaching();
-            app.UseHttpsRedirection();
-            app.UseStaticFiles();
+        builder.Services.AddIdentity<User, IdentityRole>
+        (
+            options =>
+            {
+                options.Password.RequiredUniqueChars = 0;
+                options.Password.RequireUppercase = false;
+                options.Password.RequiredLength = 8;
+                options.Password.RequireNonAlphanumeric = false;
+               options.Password.RequireLowercase = false;
+           }
+        )
+        .AddRoles<IdentityRole>()
+        .AddEntityFrameworkStores<ApplicationDbContext>()
+        .AddDefaultTokenProviders();
 
-            app.UseRouting();
+        builder.Services.AddScoped<IProductRepository, ProductRepository>();
+        builder.Services.AddScoped<IPurchaseRepository, PurchaseRepository>();
+		builder.Services.AddScoped<ISalesRepository, SalesRepository>();
 
-            app.UseAuthorization();
 
-            app.MapControllerRoute(
-                name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}");
+		builder.Services.AddScoped<IProductService, ProductService>();
+        builder.Services.AddScoped<IPurchaseService, PurchaseService>();
+		builder.Services.AddScoped<ISalesService, SalesService>();
 
-            app.Run();
+
+		builder.Services.AddControllersWithViews();
+
+        builder.Services.AddResponseCaching();
+
+        
+        var app = builder.Build();
+
+        if (!app.Environment.IsDevelopment())
+        {
+            app.UseExceptionHandler("/Home/Error");
+            app.UseHsts();
         }
+
+        app.UseResponseCaching();
+        app.UseHttpsRedirection();
+        app.UseStaticFiles();
+
+        app.UseRouting();
+
+        app.UseAuthorization();
+
+        app.MapControllerRoute
+        (
+            name: "default",
+            pattern: "{controller=Home}/{action=Index}/{id?}"
+        );
+
+        app.Run();
     }
 }

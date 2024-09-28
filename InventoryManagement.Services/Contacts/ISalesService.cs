@@ -1,9 +1,9 @@
 ﻿using InventoryManagement.DataAccess.Models;
 
-namespace InventoryManagement.DataAccess.Contacts;
+namespace InventoryManagement.Services.Contacts;
 
-    public interface ISalesRepository
-    {
+public interface ISalesService
+{
 	Task<IEnumerable<Sale>> GetAllAsync();
 	Task<Sale> GetByIdAsync(int id);
 	Task AddAsync(Sale sale);

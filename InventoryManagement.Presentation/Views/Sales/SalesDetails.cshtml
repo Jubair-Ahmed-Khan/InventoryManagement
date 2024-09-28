@@ -1,0 +1,37 @@
+﻿@model InventoryManagement.DataAccess.Models.Sale
+
+@{
+    ViewData["Title"] = "Sales Details";
+}
+
+<h1 class="text-primary">Sales Details</h1>
+<hr />
+
+<div>
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayName("Product Name")
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.SaleProduct)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayName("Product Quantity")
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.SaleQuantity)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayName("Sales Date")
+        </dt>
+        <dd class="col-sm-10">
+            @Model.SaleDate.ToString("dd/MM/yy")
+        </dd>
+    </dl>
+</div>
+<div>
+    <a class="btn btn-primary" asp-action="UpdateSales" asp-route-id="@Model?.Id">Edit</a>
+    <a class="btn btn-danger" asp-action="DisplaySales">Cancel</a>
+</div>
+
+

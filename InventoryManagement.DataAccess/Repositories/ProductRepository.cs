@@ -1,13 +1,8 @@
-﻿using InventoryManagement.DataAccess.Contacts;
-using InventoryManagement.DataAccess.Data;
+﻿using Microsoft.Extensions.DependencyInjection;
+using InventoryManagement.DataAccess.Contacts;
 using InventoryManagement.DataAccess.Models;
+using InventoryManagement.DataAccess.Data;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace InventoryManagement.DataAccess.Repositories;
 
@@ -30,17 +25,15 @@ public class ProductRepository : IProductRepository
         return await _context.Products.Where(p => p.Id == id).FirstOrDefaultAsync();
     }
 
-
     public async Task AddAsync(Product product)
     {
         await _context.Products.AddAsync(product);
+
         await _context.SaveChangesAsync();
     }
 
     public async Task UpdateAsync(int id, Product product)
     {
-
-
         Product pr = await _context.Products.Where(p => p.Id == id).FirstOrDefaultAsync();
 
         pr.ProductName = product.ProductName;
@@ -52,6 +45,7 @@ public class ProductRepository : IProductRepository
     public async Task DeleteAsync(int id)
     {
         var product = await _context.Products.FindAsync(id);
+
         if (product != null)
         {
             _context.Products.Remove(product);

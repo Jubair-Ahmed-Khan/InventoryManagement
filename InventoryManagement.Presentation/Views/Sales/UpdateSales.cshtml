@@ -1,0 +1,47 @@
+﻿@model InventoryManagement.DataAccess.Models.Sale
+
+@{
+    ViewData["Title"] = "Update Sales";
+}
+
+<h1 class="text-primary">Edit Sales</h1>
+<hr />
+
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="UpdateSales">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <div class="form-group">
+                <label asp-for="SaleProduct" class="control-label">
+                    @Html.DisplayName("Product Name")
+                </label>  
+                <input asp-for="SaleProduct" class="form-control" />
+                <span asp-validation-for="SaleProduct" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SaleQuantity" class="control-label">
+                    @Html.DisplayName("Product Quantity")
+                </label>
+                <input asp-for="SaleQuantity" class="form-control" />
+                <span asp-validation-for="SaleQuantity" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="SaleDate" class="control-label">
+                    @Html.DisplayName("Sales Date")
+                </label>
+                <input asp-for="SaleDate" class="form-control" />
+                <span asp-validation-for="SaleDate" class="text-danger"></span>
+            </div>
+            <div class="form-group my-3">
+                <input type="submit" value="Update" class="btn btn-primary" />
+                <a class="btn btn-danger" asp-action="DisplaySales">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

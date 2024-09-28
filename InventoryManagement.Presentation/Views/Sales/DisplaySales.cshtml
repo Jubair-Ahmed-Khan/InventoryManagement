@@ -1,0 +1,56 @@
+﻿@model IEnumerable<InventoryManagement.DataAccess.Models.Sale>
+
+@{
+    ViewData["Title"] = "Display Sales";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-5">
+    <h1 class="text-primary">Sales List</h1>
+    <p>
+        <a class="btn btn-info" asp-action="CreateSales" asp-controller="Sales">Sale Product</a>
+    </p>
+</div>
+
+<table class="table table-bordered text-center ">
+    <thead>
+        <tr class="bg-secondary text-white">
+            <th>
+                @Html.DisplayName("Product Name")
+            </th>
+            <th>
+                @Html.DisplayName("Product Quantity")
+            </th>
+            <th>
+                @Html.DisplayName("Sales Date")
+            </th>
+            <th>
+                @Html.DisplayName("Actions")
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SaleProduct)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SaleQuantity)
+                </td>
+                <td>
+                    @{
+                        string salesDate = Convert.ToDateTime(item.SaleDate).ToString("dd/MM/yyyy");
+                    }
+                    @salesDate
+
+                </td>
+                <td>
+                    <a class="btn btn-primary" asp-action="UpdateSales" asp-controller="Sales" asp-route-id="@item.Id">Edit</a>
+                    <a class="btn btn-success" asp-action="SalesDetails" asp-controller="Sales" asp-route-id="@item.Id">Details</a>
+                    <a class="btn btn-danger" asp-action="DeleteSales" asp-controller="Sales" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

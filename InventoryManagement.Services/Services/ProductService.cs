@@ -1,6 +1,6 @@
-﻿using InventoryManagement.DataAccess.Models;
+﻿using InventoryManagement.DataAccess.Contacts;
+using InventoryManagement.DataAccess.Models;
 using InventoryManagement.Services.Contacts;
-using InventoryManagement.DataAccess.Contacts;
 
 namespace InventoryManagement.Services.Services;
 

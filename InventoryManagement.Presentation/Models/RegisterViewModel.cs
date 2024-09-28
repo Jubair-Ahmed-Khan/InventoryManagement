@@ -1,7 +1,6 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
-using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace InventoryManagement.Presentation.Models
 {
@@ -30,6 +29,5 @@ namespace InventoryManagement.Presentation.Models
 
         [ValidateNever]
         public IEnumerable<SelectListItem> RoleList {  get; set; }
-
     }
 }
