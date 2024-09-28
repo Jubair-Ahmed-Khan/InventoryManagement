@@ -1,7 +1,12 @@
+using InventoryManagement.DataAccess.Contacts;
 using InventoryManagement.DataAccess.Data;
 using InventoryManagement.DataAccess.Models;
+using InventoryManagement.DataAccess.Repositories;
+using InventoryManagement.Services.Contacts;
+using InventoryManagement.Services.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System.Configuration;
 
 namespace InventoryManagement.Presentation
 {
@@ -11,17 +16,19 @@ namespace InventoryManagement.Presentation
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            var connectionString = builder.Configuration.GetConnectionString("default");
-
-            // Add services to the container.
-            builder.Services.AddControllersWithViews();
-
+            
             builder.Services.AddDbContext<ApplicationDbContext>
             (
-                options => options.UseSqlServer(connectionString)
+                options => {
+                    var connectionString = builder.Configuration.GetConnectionString("default");
+                    options.UseSqlServer(connectionString);
+                }
             );
 
-            builder.Services.AddIdentity<User,IdentityRole>
+            //    builder.Services.AddDbContext<ApplicationDbContext>(options =>
+            //options.UseSqlServer(builder.Configuration.GetConnectionString("default")));
+
+            builder.Services.AddIdentity<User, IdentityRole>
             (
                 options =>
                 {
@@ -29,12 +36,22 @@ namespace InventoryManagement.Presentation
                     options.Password.RequireUppercase = false;
                     options.Password.RequiredLength = 8;
                     options.Password.RequireNonAlphanumeric = false;
-                    options.Password.RequireLowercase = false;
-                }
+                   options.Password.RequireLowercase = false;
+               }
             )
             .AddRoles<IdentityRole>()
             .AddEntityFrameworkStores<ApplicationDbContext>()
             .AddDefaultTokenProviders();
+
+            builder.Services.AddScoped<IProductRepository, ProductRepository>();
+            builder.Services.AddScoped<IProductService, ProductService>();
+
+            // Add services to the container.
+            builder.Services.AddControllersWithViews();
+
+            builder.Services.AddResponseCaching();
+
+            
 
             var app = builder.Build();
 
@@ -46,6 +63,7 @@ namespace InventoryManagement.Presentation
                 app.UseHsts();
             }
 
+            app.UseResponseCaching();
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 

@@ -1,0 +1,44 @@
+﻿@model InventoryManagement.DataAccess.Models.Product
+
+@{
+    ViewData["Title"] = "CreateProduct";
+}
+
+
+
+<h1>Add Product</h1>
+<hr />
+ 
+
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="CreateProduct">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="ProductName" class="control-label">
+                    @Html.DisplayName("Product Name")
+                </label>
+                <input asp-for="ProductName" class="form-control" />
+                <span asp-validation-for="ProductName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ProductQuantity" class="control-label">
+                    @Html.DisplayName("Product Quantity")
+                </label>
+                <input asp-for="ProductQuantity" class="form-control" />
+                <span asp-validation-for="ProductQuantity" class="text-danger"></span>
+            </div>
+            <div class="form-group my-3">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+ @* <div>
+     <a asp-action="Index">Back to List</a>
+ </div> *@
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
