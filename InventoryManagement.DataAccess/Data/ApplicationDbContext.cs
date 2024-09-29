@@ -10,6 +10,7 @@ public class ApplicationDbContext:IdentityDbContext<User>
     {
 
     }
+
     public DbSet<Product> Products { get; set; }
     public DbSet<Purchase> Purchases { get; set; }
     public DbSet<Sale> Sales { get; set; }

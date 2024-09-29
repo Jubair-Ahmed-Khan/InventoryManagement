@@ -1,4 +1,5 @@
 ﻿using InventoryManagement.Presentation.Helpers;
+using InventoryManagement.Presentation.Models;
 using InventoryManagement.DataAccess.Models;
 using InventoryManagement.Services.Contacts;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -28,11 +29,15 @@ public class PurchaseController : Controller
 
     [HttpGet]
     [ResponseCache(Location = ResponseCacheLocation.Client, Duration = 30)]
-    public async Task<ActionResult<IEnumerable<Purchase>>> DisplayPurchase()
+    public async Task<IActionResult> DisplayPurchase(int? pageNumber, int pageSize = 10)
     {
-        IEnumerable<Purchase> listOfPurchases = await _purchaseService.GetAllAsync();
+        IEnumerable<Purchase> listOfPurchase = await _purchaseService.GetAllAsync();
+        var purchases = listOfPurchase.AsQueryable();
 
-        return View(listOfPurchases);
+        ViewBag.PageSize = pageSize;
+        ViewBag.TotalCount = listOfPurchase.Count();
+
+        return View(await Pagination<Purchase>.CreateAsync(purchases, pageNumber ?? 1, pageSize));
     }
 
     [HttpGet]

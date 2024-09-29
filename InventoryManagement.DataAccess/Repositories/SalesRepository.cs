@@ -44,6 +44,7 @@ public class SalesRepository : ISalesRepository
 	public async Task DeleteAsync(int id)
 	{
 		Sale sale = await _context.Sales.FindAsync(id);
+
 		if (sale != null)
 		{
 			_context.Sales.Remove(sale);

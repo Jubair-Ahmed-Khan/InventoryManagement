@@ -1,11 +1,11 @@
 ﻿using InventoryManagement.Presentation.Helpers;
+using InventoryManagement.Presentation.Models;
 using InventoryManagement.DataAccess.Models;
 using InventoryManagement.Services.Contacts;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc;
 using iTextSharp.text.pdf;
 using iTextSharp.text;
-using Humanizer;
 
 namespace InventoryManagement.Presentation.Controllers;
 
@@ -29,12 +29,16 @@ public class SalesController : Controller
 
 	[HttpGet]
 	[ResponseCache(Location = ResponseCacheLocation.Client, Duration = 30)]
-	public async Task<ActionResult<IEnumerable<Sale>>> DisplaySales()
-	{
-		IEnumerable<Sale> listOfSales = await _salesService.GetAllAsync();
+    public async Task<IActionResult> DisplaySales(int? pageNumber, int pageSize = 10)
+    {
+        IEnumerable<Sale> listOfSales = await _salesService.GetAllAsync();
+        var sales = listOfSales.AsQueryable();
 
-		return View(listOfSales);
-	}
+        ViewBag.PageSize = pageSize;
+        ViewBag.TotalCount = listOfSales.Count();
+
+        return View(await Pagination<Sale>.CreateAsync(sales, pageNumber ?? 1, pageSize));
+    }
 
 	[HttpGet]
 	public async Task<ActionResult> CreateSales()
@@ -219,6 +223,4 @@ public class SalesController : Controller
             return File(pdfContent, "application/pdf", "SalesReport.pdf");
         }
     }
-
-
 }

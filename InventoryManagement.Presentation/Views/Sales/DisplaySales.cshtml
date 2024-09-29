@@ -1,4 +1,4 @@
-﻿@model IEnumerable<InventoryManagement.DataAccess.Models.Sale>
+﻿@model Pagination<InventoryManagement.DataAccess.Models.Sale>
 
 @{
     ViewData["Title"] = "Display Sales";
@@ -12,46 +12,113 @@
     </p>
 </div>
 
-<table class="table table-bordered text-center ">
-    <thead>
-        <tr class="bg-secondary text-white">
-            <th>
-                @Html.DisplayName("Product Name")
-            </th>
-            <th>
-                @Html.DisplayName("Product Quantity")
-            </th>
-            <th>
-                @Html.DisplayName("Sales Date")
-            </th>
-            <th>
-                @Html.DisplayName("Actions")
-            </th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.SaleProduct)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.SaleQuantity)
-                </td>
-                <td>
-                    @{
-                        string salesDate = Convert.ToDateTime(item.SaleDate).ToString("dd/MM/yyyy");
-                    }
-                    @salesDate
-
-                </td>
-                <td>
-                    <a class="btn btn-primary" asp-action="UpdateSales" asp-controller="Sales" asp-route-id="@item.Id">Edit</a>
-                    <a class="btn btn-success" asp-action="SalesDetails" asp-controller="Sales" asp-route-id="@item.Id">Details</a>
-                    <a class="btn btn-danger" asp-action="DeleteSales" asp-controller="Sales" asp-route-id="@item.Id">Delete</a>
-                </td>
+@if (ViewBag.TotalCount == 0)
+{
+    <div class="d-flex justify-content-center align-content-center vh-100 w-100 border border-1 border-bottom-0 border-dark">
+        <div class="d-flex flex-column justify-content-center align-content-center text-center w-75 h-25" style="margin-top:180px">
+            <h1 class="display-6 text-bold text-muted">There are no sales available.</h1>
+        </div>
+    </div>
+}
+else
+{
+    var productCount = ViewBag.TotalCount;
+    <table class="table table-bordered text-center ">
+        <thead>
+            <tr class="bg-secondary text-white">
+                <th>
+                    @Html.DisplayName("Product Name")
+                </th>
+                <th>
+                    @Html.DisplayName("Product Quantity")
+                </th>
+                <th>
+                    @Html.DisplayName("Sales Date")
+                </th>
+                <th>
+                    @Html.DisplayName("Actions")
+                </th>
             </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.SaleProduct)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.SaleQuantity)
+                    </td>
+                    <td>
+                        @{
+                            string salesDate = Convert.ToDateTime(item.SaleDate).ToString("dd/MM/yyyy");
+                        }
+                        @salesDate
+
+                    </td>
+                    <td>
+                        <a class="btn btn-primary" asp-action="UpdateSales" asp-controller="Sales" asp-route-id="@item.Id">Edit</a>
+                        <a class="btn btn-success" asp-action="SalesDetails" asp-controller="Sales" asp-route-id="@item.Id">Details</a>
+                        <a class="btn btn-danger" asp-action="DeleteSales" asp-controller="Sales" asp-route-id="@item.Id">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <div class="d-flex justify-content-between">
+        @{
+            var startIndex = (Model.PageNumber - 1) * ViewBag.PageSize + 1;
+            var endIndex = startIndex + Math.Min(productCount - startIndex + 1, ViewBag.PageSize) - 1;
         }
-    </tbody>
-</table>
+        <div class="w-25">Showing @startIndex to @endIndex out of @productCount</div>
+
+        <nav>
+            <ul class="pagination">
+                @if (Model.HasPreviousPage)
+                {
+                    <li class="page-item">
+                        <a class="page-link" asp-action="DisplaySales" asp-route-pageNumber="@(Model.PageNumber - 1)">Previous</a>
+                    </li>
+                }
+                else
+                {
+                    <li class="page-item disabled">
+                        <span class="page-link">Previous</span>
+                    </li>
+                }
+
+                @for (int i = 1; i <= Model.TotalPages; i++)
+                {
+                    if (i == Model.PageNumber)
+                    {
+                        <li class="page-item active">
+                            <span class="page-link">@i</span>
+                        </li>
+                    }
+                    else
+                    {
+                        <li class="page-item">
+                            <a class="page-link" asp-action="DisplaySales" asp-route-pageNumber="@i">@i</a>
+                        </li>
+                    }
+                }
+
+                @if (Model.HasNextPage)
+                {
+                    <li class="page-item">
+                        <a class="page-link" asp-action="DisplaySales" asp-route-pageNumber="@(Model.PageNumber + 1)">Next</a>
+                    </li>
+                }
+                else
+                {
+                    <li class="page-item disabled">
+                        <span class="page-link">Next</span>
+                    </li>
+                }
+            </ul>
+        </nav>
+    </div>
+}
+
