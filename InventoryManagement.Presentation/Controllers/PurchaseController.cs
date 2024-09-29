@@ -200,7 +200,7 @@ public class PurchaseController : Controller
                 {
                     HorizontalAlignment = Element.ALIGN_CENTER
                 });
-                table.AddCell(new PdfPCell(new Phrase(product.PurchaseDate.ToString(), tableDataFont))
+                table.AddCell(new PdfPCell(new Phrase(product.PurchaseDate.ToShortDateString(), tableDataFont))
                 {
                     HorizontalAlignment = Element.ALIGN_CENTER
                 });
