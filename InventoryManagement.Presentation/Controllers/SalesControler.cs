@@ -6,6 +6,9 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc;
 using iTextSharp.text.pdf;
 using iTextSharp.text;
+using InventoryManagement.Services.Mappers;
+using InventoryManagement.Services.DTOs;
+using InventoryManagement.Services.Services;
 
 namespace InventoryManagement.Presentation.Controllers;
 
@@ -13,13 +16,15 @@ public class SalesController : Controller
 {
 	private readonly ISalesService _salesService;
 	private readonly IProductService _productService;
+    private readonly ISalesMapper _mapper;
     private readonly IWebHostEnvironment _webHostEnvironment;
 
-    public SalesController(ISalesService salesService, IProductService productService, IWebHostEnvironment webHostEnvironment)
+    public SalesController(ISalesService salesService, IProductService productService, IWebHostEnvironment webHostEnvironment,ISalesMapper mapper)
     {
         _salesService = salesService;
         _productService = productService;
         _webHostEnvironment = webHostEnvironment;
+        _mapper = mapper;
     }
 
     public IActionResult Index()
@@ -52,21 +57,14 @@ public class SalesController : Controller
 	}
 
 	[HttpPost]
-	public async Task<ActionResult> CreateSales(Sale sale)
+	public async Task<ActionResult> CreateSales(SalesDTO salesDto)
 	{
 		if (!ModelState.IsValid)
 		{
-			return View(sale);
+			return View(salesDto);
 		}
 
-		Sale newSales = new Sale
-		{
-			SaleProduct = sale.SaleProduct,
-			SaleQuantity = sale.SaleQuantity,
-			SaleDate = sale.SaleDate
-		};
-
-		await _salesService.AddAsync(newSales);
+		await _salesService.AddAsync(salesDto);
 
 		return RedirectToAction("DisplaySales", "Sales");
 	}
@@ -75,30 +73,36 @@ public class SalesController : Controller
 	public async Task<ActionResult> UpdateSales(int id)
 	{
 		Sale sale = await _salesService.GetByIdAsync(id);
+        SalesDTO salesDto = _mapper.MapToDTO(sale);
 
 		var products = await _productService.GetAllAsync();
 		List<string> productList = products.Select(p => p.ProductName).ToList();
 
+        ViewBag.Id = id;
 		ViewBag.ProductName = new SelectList(productList);
 
-		return View(sale);
+		return View(salesDto);
 	}
 
 	[HttpPost]
 	public async Task<ActionResult> UpdateSales(int id, Sale sale)
 	{
-
-		await _salesService.UpdateAsync(id, sale);
+        var salesDto = _mapper.MapToDTO(sale);
+        await _salesService.UpdateAsync(id, salesDto);
 
 		return RedirectToAction("DisplaySales", "Sales");
 	}
 
 	[HttpGet]
 	public async Task<ActionResult> SalesDetails(int id)
-	{
-		Sale sale = await _salesService.GetByIdAsync(id);
+    {
 
-		return View(sale);
+        Sale sale = await _salesService.GetByIdAsync(id);
+        SalesDTO salesDto = _mapper.MapToDTO(sale);
+
+        ViewBag.Id = id;
+
+		return View(salesDto);
 	}
 
 	[HttpGet]

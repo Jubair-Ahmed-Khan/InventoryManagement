@@ -1,7 +1,8 @@
-﻿@model InventoryManagement.DataAccess.Models.Purchase
+﻿@model InventoryManagement.Services.DTOs.PurchaseDTO
 
 @{
     ViewData["Title"] = "Update Purchase";
+    var Id = ViewBag.Id;
 }
 
 <h1 class="text-primary">Edit Purchase</h1>
@@ -11,7 +12,7 @@
     <div class="col-md-4">
         <form asp-action="UpdatePurchase">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="@Id" />
             <div class="form-group">
                 <label asp-for="PurchaseProduct" class="control-label">
                     @Html.DisplayName("Product Name")

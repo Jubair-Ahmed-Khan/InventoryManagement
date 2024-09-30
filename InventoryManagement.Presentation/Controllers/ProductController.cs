@@ -2,6 +2,8 @@
 using InventoryManagement.Presentation.Models;
 using InventoryManagement.DataAccess.Models;
 using InventoryManagement.Services.Contacts;
+using InventoryManagement.Services.Mappers;
+using InventoryManagement.Services.DTOs;
 using Microsoft.AspNetCore.Mvc;
 using iTextSharp.text.pdf;
 using iTextSharp.text;
@@ -12,11 +14,13 @@ public class ProductController : Controller
 {
     private readonly IProductService _productService;
     private readonly IWebHostEnvironment _webHostEnvironment;
+    private readonly IProductMapper _mapper;
 
-    public ProductController(IProductService productService, IWebHostEnvironment webHostEnvironment)
+    public ProductController(IProductService productService, IWebHostEnvironment webHostEnvironment,IProductMapper mapper)
     {
         _productService = productService;
         _webHostEnvironment = webHostEnvironment;
+        _mapper = mapper;
     }
 
     public IActionResult Index()
@@ -44,20 +48,14 @@ public class ProductController : Controller
     }
 
     [HttpPost]
-    public async Task<ActionResult> CreateProduct(Product product)
+    public async Task<ActionResult> CreateProduct(ProductDTO product)
     {
         if (!ModelState.IsValid)
         {
             return View(product);
         }
 
-        Product newProduct = new Product
-        {
-            ProductName = product.ProductName,
-            ProductQuantity = product.ProductQuantity,
-        };
-
-        await _productService.AddAsync(newProduct);
+        await _productService.AddAsync(product);
 
         return RedirectToAction("DisplayProduct", "Product");
     }
@@ -66,15 +64,19 @@ public class ProductController : Controller
     public async Task<ActionResult> UpdateProduct(int id)
     {
         Product product = await _productService.GetByIdAsync(id);
+        ProductDTO productDto = _mapper.MapToDTO(product);
 
-        return View(product);
+        ViewBag.Id = id;
+
+        return View(productDto);
     }
 
     [HttpPost]
     public async Task<ActionResult> UpdateProduct(int id,Product product)
     {
+        var productDto = _mapper.MapToDTO(product);
        
-        await _productService.UpdateAsync(id,product);
+        await _productService.UpdateAsync(id, productDto);
 
         return RedirectToAction("DisplayProduct", "Product");
     }
@@ -83,8 +85,11 @@ public class ProductController : Controller
     public async Task<ActionResult> ProductDetails(int id)
     {
         Product product = await _productService.GetByIdAsync(id);
+        ProductDTO productDto = _mapper.MapToDTO(product);
 
-        return View(product);
+        ViewBag.Id = id;
+
+        return View(productDto);
     }
 
     [HttpGet]

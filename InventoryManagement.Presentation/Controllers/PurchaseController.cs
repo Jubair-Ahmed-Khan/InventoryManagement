@@ -3,9 +3,12 @@ using InventoryManagement.Presentation.Models;
 using InventoryManagement.DataAccess.Models;
 using InventoryManagement.Services.Contacts;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using InventoryManagement.Services.DTOs;
 using Microsoft.AspNetCore.Mvc;
 using iTextSharp.text.pdf;
 using iTextSharp.text;
+using InventoryManagement.Services.Mappers;
+
 
 namespace InventoryManagement.Presentation.Controllers;
 
@@ -13,13 +16,15 @@ public class PurchaseController : Controller
 {
     private readonly IPurchaseService _purchaseService;
     private readonly IProductService _productService;
+    private readonly IPurchaseMapper _mapper;
     private readonly IWebHostEnvironment _webHostEnvironment;
 
-    public PurchaseController(IPurchaseService purchaseService, IProductService productService, IWebHostEnvironment webHostEnvironment)
+    public PurchaseController(IPurchaseService purchaseService, IProductService productService, IWebHostEnvironment webHostEnvironment,IPurchaseMapper mapper)
     {
         _purchaseService = purchaseService;
         _productService = productService;
         _webHostEnvironment = webHostEnvironment;
+        _mapper = mapper;
     }
 
     public IActionResult Index()
@@ -52,21 +57,14 @@ public class PurchaseController : Controller
     }
 
     [HttpPost]
-    public async Task<ActionResult> CreatePurchase(Purchase purchase)
+    public async Task<ActionResult> CreatePurchase(PurchaseDTO purchaseDto)
     {
         if (!ModelState.IsValid)
         {
-            return View(purchase);
+            return View(purchaseDto);
         }
 
-        Purchase newPurchase = new Purchase
-        {
-            PurchaseProduct = purchase.PurchaseProduct,
-            PurchaseQuantity = purchase.PurchaseQuantity,
-            PurchaseDate = purchase.PurchaseDate
-        };
-
-        await _purchaseService.AddAsync(newPurchase);
+        await _purchaseService.AddAsync(purchaseDto);
 
         return RedirectToAction("DisplayPurchase", "Purchase");
     }
@@ -74,21 +72,23 @@ public class PurchaseController : Controller
     [HttpGet]
     public async Task<ActionResult> UpdatePurchase(int id)
     {
-        Purchase purchase = await _purchaseService.GetByIdAsync(id);
+        Purchase product = await _purchaseService.GetByIdAsync(id);
+        PurchaseDTO purchaseDto = _mapper.MapToDTO(product);
 
         var products = await _productService.GetAllAsync();
         List<string> productList = products.Select(p => p.ProductName).ToList();
 
+        ViewBag.Id = id;
         ViewBag.ProductName = new SelectList(productList);
 
-        return View(purchase);
+        return View(purchaseDto);
     }
 
     [HttpPost]
     public async Task<ActionResult> UpdatePurchase(int id, Purchase purchase)
     {
-
-        await _purchaseService.UpdateAsync(id, purchase);
+        var purchaseDto = _mapper.MapToDTO(purchase);
+        await _purchaseService.UpdateAsync(id, purchaseDto);
 
         return RedirectToAction("DisplayPurchase", "Purchase");
     }
@@ -97,8 +97,11 @@ public class PurchaseController : Controller
     public async Task<ActionResult> PurchaseDetails(int id)
     {
         Purchase purchase = await _purchaseService.GetByIdAsync(id);
+        PurchaseDTO purchaseDto = _mapper.MapToDTO(purchase);
 
-        return View(purchase);
+        ViewBag.Id = id;
+
+        return View(purchaseDto);
     }
 
     [HttpGet]

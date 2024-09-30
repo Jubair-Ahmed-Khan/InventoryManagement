@@ -3,6 +3,7 @@ using InventoryManagement.DataAccess.Contacts;
 using InventoryManagement.DataAccess.Models;
 using InventoryManagement.Services.Contacts;
 using InventoryManagement.Services.Services;
+using InventoryManagement.Services.Mappers;
 using InventoryManagement.DataAccess.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -42,8 +43,11 @@ public class Program
         builder.Services.AddScoped<IPurchaseRepository, PurchaseRepository>();
 		builder.Services.AddScoped<ISalesRepository, SalesRepository>();
 
+        builder.Services.AddScoped<IProductMapper, ProductMapper>();
+        builder.Services.AddScoped<IPurchaseMapper, PurchaseMapper>();
+        builder.Services.AddScoped<ISalesMapper, SalesMapper>();
 
-		builder.Services.AddScoped<IProductService, ProductService>();
+        builder.Services.AddScoped<IProductService, ProductService>();
         builder.Services.AddScoped<IPurchaseService, PurchaseService>();
 		builder.Services.AddScoped<ISalesService, SalesService>();
 

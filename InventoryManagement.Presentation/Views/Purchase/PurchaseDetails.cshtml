@@ -1,4 +1,4 @@
-﻿@model InventoryManagement.DataAccess.Models.Purchase
+﻿@model InventoryManagement.Services.DTOs.PurchaseDTO
 
 @{
     ViewData["Title"] = "Purchase Details";
@@ -30,7 +30,7 @@
     </dl>
 </div>
 <div>
-    <a class="btn btn-primary" asp-action="UpdatePurchase" asp-route-id="@Model?.Id">Edit</a>
+    <a class="btn btn-primary" asp-action="UpdatePurchase" asp-route-id="@ViewBag.Id">Edit</a>
     <a class="btn btn-danger" asp-action="DisplayPurchase">Cancel</a>
 </div>
 

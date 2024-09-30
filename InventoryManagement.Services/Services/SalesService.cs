@@ -1,16 +1,20 @@
 ﻿using InventoryManagement.DataAccess.Contacts;
 using InventoryManagement.DataAccess.Models;
 using InventoryManagement.Services.Contacts;
+using InventoryManagement.Services.DTOs;
+using InventoryManagement.Services.Mappers;
 
 namespace InventoryManagement.Services.Services;
 
 public class SalesService : ISalesService
 {
 	private readonly ISalesRepository _repository;
+    private readonly ISalesMapper _mapper;
 
-	public SalesService(ISalesRepository repository)
+    public SalesService(ISalesRepository repository,ISalesMapper mapper)
 	{
 		_repository = repository;
+		_mapper = mapper;
 	}
 
 	public async Task<IEnumerable<Sale>> GetAllAsync()
@@ -23,15 +27,17 @@ public class SalesService : ISalesService
 		return await _repository.GetByIdAsync(id);
 	}
 
-	public async Task AddAsync(Sale sale)
+	public async Task AddAsync(SalesDTO salesDto)
 	{
-		await _repository.AddAsync(sale);
+        var newProduct = _mapper.MapToSales(salesDto);
+        await _repository.AddAsync(newProduct);
 	}
 
-	public async Task UpdateAsync(int id, Sale sale)
+	public async Task UpdateAsync(int id, SalesDTO salesDto)
 	{
-		await _repository.UpdateAsync(id, sale);
-	}
+        var newProduct = _mapper.MapToSales(salesDto);
+        await _repository.UpdateAsync(id, newProduct);
+    }
 
 	public async Task DeleteAsync(int id)
 	{
