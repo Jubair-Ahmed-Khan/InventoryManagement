@@ -15,12 +15,14 @@ public class ProductController : Controller
     private readonly IProductService _productService;
     private readonly IWebHostEnvironment _webHostEnvironment;
     private readonly IProductMapper _mapper;
+    private readonly ILogger<ProductController> _logger;
 
-    public ProductController(IProductService productService, IWebHostEnvironment webHostEnvironment,IProductMapper mapper)
+    public ProductController(IProductService productService, IWebHostEnvironment webHostEnvironment,IProductMapper mapper, ILogger<ProductController> logger)
     {
         _productService = productService;
         _webHostEnvironment = webHostEnvironment;
         _mapper = mapper;
+        _logger = logger;
     }
 
     public IActionResult Index()
@@ -32,13 +34,30 @@ public class ProductController : Controller
     [ResponseCache(Location = ResponseCacheLocation.Client, Duration = 30)]
     public async Task<IActionResult> DisplayProduct(int? pageNumber, int pageSize = 10)
     {
-        IEnumerable<Product> listOfProducts = await _productService.GetAllAsync();
-        var products = listOfProducts.AsQueryable();
 
-        ViewBag.PageSize = pageSize;
-        ViewBag.TotalCount = listOfProducts.Count();
+        IEnumerable<Product> listOfProducts = new List<Product>();
+        IQueryable<Product> products = listOfProducts.AsQueryable(); 
+        
+        try
+        {
+            _logger.LogInformation("Fetching all product from database");
 
-        return View(await Pagination<Product>.CreateAsync(products, pageNumber ?? 1, pageSize));
+            listOfProducts = await _productService.GetAllAsync();
+            products = listOfProducts.AsQueryable();
+
+            ViewBag.PageSize = pageSize;
+            ViewBag.TotalCount = listOfProducts.Count();
+
+            _logger.LogInformation("Fetching all product successful");
+
+            return View(await Pagination<Product>.CreateAsync(products, pageNumber ?? 1, pageSize));
+        }
+        catch(Exception ex)
+        {
+            _logger.LogError("An error occured while fetching products");
+        }
+
+        return View();
     }
 
     [HttpGet]
@@ -55,9 +74,21 @@ public class ProductController : Controller
             return View(product);
         }
 
-        await _productService.AddAsync(product);
+        try
+        {
+            _logger.LogInformation("Creating a product");
 
+            await _productService.AddAsync(product);
+
+            _logger.LogInformation("Product Added Successfully");
+        }
+        catch(Exception ex)
+        {
+            _logger.LogError("An error occured while adding the product");
+        }
+        
         return RedirectToAction("DisplayProduct", "Product");
+        
     }
 
     [HttpGet]
@@ -74,10 +105,20 @@ public class ProductController : Controller
     [HttpPost]
     public async Task<ActionResult> UpdateProduct(int id,Product product)
     {
-        var productDto = _mapper.MapToDTO(product);
-       
-        await _productService.UpdateAsync(id, productDto);
+        try
+        {
+            _logger.LogInformation("Updating a product");
 
+            var productDto = _mapper.MapToDTO(product);
+            await _productService.UpdateAsync(id, productDto);
+
+            _logger.LogInformation("Product updated successfully");
+        }
+        catch
+        {
+            _logger.LogError("An error occured while updating the product");
+        }
+        
         return RedirectToAction("DisplayProduct", "Product");
     }
 

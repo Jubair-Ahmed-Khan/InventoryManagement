@@ -7,6 +7,7 @@ using InventoryManagement.Services.Mappers;
 using InventoryManagement.DataAccess.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Serilog;
 
 namespace InventoryManagement.Presentation;
 
@@ -38,6 +39,16 @@ public class Program
         .AddRoles<IdentityRole>()
         .AddEntityFrameworkStores<ApplicationDbContext>()
         .AddDefaultTokenProviders();
+
+        Log.Logger = new LoggerConfiguration()
+                        .ReadFrom.Configuration(builder.Configuration)
+                        .Enrich.FromLogContext()
+                        .WriteTo.Console()
+                        .WriteTo.File("logs/log.txt", rollingInterval: RollingInterval.Day)
+                        .CreateLogger();
+
+        
+        builder.Host.UseSerilog();
 
         builder.Services.AddScoped<IProductRepository, ProductRepository>();
         builder.Services.AddScoped<IPurchaseRepository, PurchaseRepository>();

@@ -2,13 +2,12 @@
 using InventoryManagement.Presentation.Models;
 using InventoryManagement.DataAccess.Models;
 using InventoryManagement.Services.Contacts;
+using InventoryManagement.Services.Mappers;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using InventoryManagement.Services.DTOs;
 using Microsoft.AspNetCore.Mvc;
 using iTextSharp.text.pdf;
 using iTextSharp.text;
-using InventoryManagement.Services.Mappers;
-using InventoryManagement.Services.DTOs;
-using InventoryManagement.Services.Services;
 
 namespace InventoryManagement.Presentation.Controllers;
 

@@ -1,8 +1,8 @@
 ﻿using InventoryManagement.DataAccess.Contacts;
 using InventoryManagement.DataAccess.Models;
 using InventoryManagement.Services.Contacts;
-using InventoryManagement.Services.DTOs;
 using InventoryManagement.Services.Mappers;
+using InventoryManagement.Services.DTOs;
 
 namespace InventoryManagement.Services.Services;
 

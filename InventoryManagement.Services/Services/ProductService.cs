@@ -4,7 +4,6 @@ using InventoryManagement.Services.Contacts;
 using InventoryManagement.Services.Mappers;
 using InventoryManagement.Services.DTOs;
 
-
 namespace InventoryManagement.Services.Services;
 
 public class ProductService:IProductService

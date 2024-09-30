@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-
 namespace InventoryManagement.Services.DTOs;
 
 public class PurchaseDTO
